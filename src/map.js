@@ -27,24 +27,19 @@ class Mapn extends React.Component {
           }}
           style ={style}>
 
-          <Marker onClick={this.onMarkerClick}
-                  name={'Current location'} />
+          {this.props.locations.map((marker) =>
+            <Marker key={marker.title}
+              title={marker.title}
+              name={marker.title}
+              position={marker.location}
+            />
+        )}
 
           <InfoWindow onClose={this.onInfoWindowClose}>
               <div>
 
               </div>
           </InfoWindow>
-          <Marker
-          title={'Liberty Bridge'}
-          name={'Liberty Bridge'}
-          position={{lat: 34.8447, lng: -82.4006}} />
-
-          <Marker
-          name={'Flour Field'}
-          title={'Flour Field'}
-          position={{lat: 34.8423, lng: -82.4081 }} />
-
         </Map>
 
       </div>

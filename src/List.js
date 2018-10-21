@@ -25,6 +25,4 @@ class Nlist extends React.Component {
   }
 }
 
-// Loads Google Maps API
-// Source: https://www.npmjs.com/package/google-maps-react
 export default Nlist
