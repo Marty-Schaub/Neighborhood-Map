@@ -11,7 +11,7 @@ class App extends React.Component {
   this.onMarkerClick = this.onMarkerClick.bind(this);
   this.state = {     locations: [
            {id: "4b625ff4f964a520eb442ae3", title: 'Falls Park', location: {lat:34.8443, lng:-82.4015},phone:"", address:"",city:"",name:""},
-           {id:"52dbe8a7498e53fc4d7e1a7d", title: "Sobey's", location: {lat:34.8482, lng:-82.3999},phone:"", address:"",city:"",name:""},
+           {id:"52dbe8a7498e53fc4d7e1a7d", title: "Soby's", location: {lat:34.8482, lng:-82.3999},phone:"", address:"",city:"",name:""},
            {id:"4b535e14f964a520569927e3", title: 'Liberty Bridge', location: {lat:34.8447, lng:-82.4006},phone:"", address:"",city:"",name:""},
            {id:"4b1d9bbaf964a520031324e3", title: 'Peace Center', location: {lat:34.8475, lng:-82.4015},phone:"", address:"",city:"",name:""},
            {id:"4b68c62df964a520418c2be3", title: 'Flour Field', location: {lat:34.8423, lng:-82.4081},phone:"", address:"",city:"",name:""},
@@ -21,7 +21,8 @@ class App extends React.Component {
          ],lDetails:{},
           lName:"",
           lat:"",
-          lng:""
+          lng:"",
+          myId:""
      }
 
 }
@@ -29,8 +30,6 @@ class App extends React.Component {
 
    onMarkerClick = (props, marker, e) =>{
    const markId = props.id
-   console.log(props.id)
-   console.log(marker)
    SquareAPI.getVenueDetails(markId).then((response)=>{
      this.setState({
        phone:response.response.venue.contact.formattedPhone,
@@ -39,10 +38,11 @@ class App extends React.Component {
        name:response.response.venue.name,
        lat:response.response.venue.location.lat,
        lng:response.response.venue.location.lng,
+       myId:response.response.venue.id
 
      })
-     console.log(response)
-
+     const myPosition =[
+      this.state.lat, this.state.lng]
    });
    };
 
@@ -63,14 +63,14 @@ class App extends React.Component {
   render() {
 
     return (
-<div>
+<div className="main">
 <Mapn ref="Map"
 locations= {this.state.locations}
 phone = {this.state.phone}
 address={this.state.address}
 city={this.state.city}
 name={this.state.name}
-id= {this.state.id}
+id= {this.state.myId}
 onMarkerClick={this.onMarkerClick}
 showingWindow= {this.state.showingWindow}
 />
@@ -80,14 +80,12 @@ phone = {this.state.phone}
 address={this.state.address}
 city={this.state.city}
 name={this.state.name}
-id= {this.state.id}
+id= {this.state.myId}
 onMarkerClick={this.onMarkerClick}
 showingWindow= {this.state.showingWindow}
-lat={this.state.lat}
-following={this.state.lng}
+myPosition ={this.myPosition}
 
 />
-
 
 </div>
     )

@@ -15,7 +15,7 @@ onNew = (props, marker, e)=>{
     activeMarker: marker,
     showingWindow: true,
   })
-  console.log(marker)
+  console.log(e.id)
 
   this.props.onMarkerClick(props, marker, e)
   this.setState({showingInfoWindow:true})
@@ -39,9 +39,6 @@ onMapClicked = (props) => {
   height: '100%'
 }
 
-
-
-
   let bounds = new this.props.google.maps.LatLngBounds();
   let points =[];
 
@@ -54,9 +51,9 @@ onMapClicked = (props) => {
 
   return (
       <div className="map-container">
-        <h1 className="heading">Beautiful Greenville SC</h1>
+        <h1 className="heading">Greenville South Carolina     </h1>
         <Map
-        google={this.props.google} zoom={16}
+        google={this.props.google} zoom={14}
         initialCenter={{
             lat: 34.8526,
             lng: -82.4006
@@ -84,7 +81,7 @@ onMapClicked = (props) => {
             <h2>{this.props.address}</h2>
             <h2>{this.props.city}</h2>
             <h2>{this.props.phone}</h2>
-          </div>
+            </div>
         </InfoWindow>
 
           <InfoWindow onClose={this.onInfoWindowClose}>
