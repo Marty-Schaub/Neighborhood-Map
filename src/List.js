@@ -1,43 +1,50 @@
-import React from 'react'
-class Nlist extends React.Component {
+import React, { Component } from 'react'
+import './App.css';
+
+class Nlist extends Component {
   constructor (props){
   super (props);
-    this.state = {locations:'',showingInfoWindow: false,activeMarker: {},selectedPlace: {},phone:"",myId:"",showingWindow:false ,coords: { lat:34.8482, lng:-82.3999 }}
-//
+
+    this.state = {query:""}
 }
 
 onNewLi = (props, marker, e)=>{
+  if(this.state.showingWindow===true){
+    this.setState({showingWindow:false})
+  }else{
   this.setState({
     selectedPlace: props,
     activeMarker: marker,
     showingWindow: "true"
   })
-  this.props.onMarkerClick( props, marker, e)
-  this.onUpdate()
+
+console.log(e)
+  this.props.fourSquareData( props)
+  this.onUpdate(props)
+  console.log(props)}
 }
 
-onUpdate = ()=>{
+onUpdate = (props)=>{
 this.setState({showingWindow:true})
-}
-onClose = ()=>{
-this.setState({showingWindow:false})
-
+console.log(props)
 }
 
   render() {
 
   return (
-      <div className="list-places">
+      <div>
+
         <ul className="places">
-        {this.props.locations.map((marker) =>
-          <li key={marker.id}
-          id= {marker.id}
-          title={marker.title}
-          name={marker.title}
-          position={marker.location}
-          >
-          <div className="marker-title" onClick={event=>this.onNewLi(marker,this.props, marker)}>{marker.title}</div>
-          {this.state.showingWindow&&this.props.id===marker.id?
+        {this.props.locations.map((location, index) =>
+          <li key={index}
+          index={location.index}
+          id= {location.id}
+          title={location.title}
+          name={location.title}
+          position={location.location}
+          ><button key={index} className="list-button" onClick={event=>this.onNewLi(location,this.props, index)} >{location.title}</button>
+
+          {this.state.showingWindow&&this.props.id===location.id?
           <div className="extra-data">
 
           <div>
@@ -45,19 +52,13 @@ this.setState({showingWindow:false})
             <h4>{this.props.address}</h4>
             <h4>{this.props.city}</h4>
             <h4>{this.props.phone}</h4>
+            <h6 className="four-square">Details from Four Square</h6>
           </div>
           </div>:null
         }
-
-
           </li>
       )}
         </ul>
-
-        {this.state.showingWindow?
-      <button onClick={this.onClose}>Close Details</button>:null
-    }
-
       </div>
     )
   }
