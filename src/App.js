@@ -26,6 +26,8 @@ class App extends React.Component {
           showingLocations:[],
           query:"",
           filtered:[],
+          markerProp:"",
+          markerIndex:""
     }
 }
 
@@ -49,7 +51,6 @@ class App extends React.Component {
       this.setState({query: query,
         filtered:this.filterLocations(this.state.locations, query)
      })
-     // this.componentWillMount();
      }
 
 filterLocations =(locations, query)=>{
@@ -69,10 +70,17 @@ this.setState({
 console.log(this.state.query)
 }
 
-markerHolder = (markers)=>{
-  console.log(markers)
-  this.setState({markers})
+markerHolder = (props, marker)=>{
+  this.setState({
+    markerProp:props.id,
+    markerIndex:marker
+  })
+  console.log(marker)
+  console.log(props)
+
 }
+
+
 
   render() {
     const {query} = this.state
@@ -98,6 +106,8 @@ markerHolder = (markers)=>{
     fourSquareData={this.fourSquareData}
     showingWindow= {this.state.showingWindow}
     markerHolder={this.markerHolder}
+    markerIndex={this.state.markerIndex}
+    markerProp={this.state.markerProp}
     />
 
     <div className="list-places">
@@ -122,7 +132,8 @@ markerHolder = (markers)=>{
     id= {this.state.myId}
     fourSquareData={this.fourSquareData}
     showingWindow= {this.state.showingWindow}
-    filteredLoc={this.filteredLoc}/>
+    filteredLoc={this.filteredLoc}
+    markerHolder={this.markerHolder}/>
 
 
 </div>

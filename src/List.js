@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import './App.css';
 
+
 class Nlist extends Component {
   constructor (props){
   super (props);
@@ -8,7 +9,7 @@ class Nlist extends Component {
     this.state = {query:""}
 }
 
-onNewLi = (props, marker, e)=>{
+onNewLi = (props, marker, index)=>{
   if(this.state.showingWindow===true){
     this.setState({showingWindow:false})
   }else{
@@ -18,7 +19,8 @@ onNewLi = (props, marker, e)=>{
     showingWindow: "true"
   })
 
-console.log(e)
+  this.props.markerHolder(props)
+  console.log(index)
   this.props.fourSquareData( props)
   this.onUpdate(props)
   console.log(props)}
@@ -26,7 +28,7 @@ console.log(e)
 
 onUpdate = (props)=>{
 this.setState({showingWindow:true})
-console.log(props)
+console.log(props.id)
 }
 
   render() {
