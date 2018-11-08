@@ -2,16 +2,19 @@ import React, { Component } from 'react'
 import './App.css';
 
 
-class Nlist extends Component {
+class ListPlaces extends Component {
   constructor (props){
   super (props);
 
     this.state = {query:""}
 }
 
+// this fires when the list button is clicked. It sets a lot properties and passed data up to the APP.js file
 onNewLi = (props, marker, index)=>{
   if(this.state.showingWindow===true){
     this.setState({showingWindow:false})
+  //   this.props.markerHolder(null,null,null)
+    // this.props.closeWindow()
   }else{
   this.setState({
     selectedPlace: props,
@@ -19,16 +22,16 @@ onNewLi = (props, marker, index)=>{
     showingWindow: "true"
   })
 
-  this.props.markerHolder(props)
-  console.log(index)
-  this.props.fourSquareData( props)
-  this.onUpdate(props)
-  console.log(props)}
+// passes the props, marker and idex up to APP.js so it can be passed back down to Map.js
+  this.props.markerHolder(props, marker, index)
+  // passess data to the fourSquare API and then the data is passed back down to here as extra details and also passed to map.JS for the InfoWindow
+  this.props.fourSquareData(props.id)
+  this.onUpdate(props)}
 }
 
+// this hides or shows the extra details in the list when the button is clicked
 onUpdate = (props)=>{
 this.setState({showingWindow:true})
-console.log(props.id)
 }
 
   render() {
@@ -50,11 +53,11 @@ console.log(props.id)
           <div className="extra-data">
 
           <div>
-            <h3>{this.props.name}</h3>
+
             <h4>{this.props.address}</h4>
             <h4>{this.props.city}</h4>
             <h4>{this.props.phone}</h4>
-            <h6 className="four-square">Details from Four Square</h6>
+            <h6 className="four-square">Details from FOURSQUARE</h6>
           </div>
           </div>:null
         }
@@ -66,4 +69,4 @@ console.log(props.id)
   }
 }
 
-export default Nlist
+export default ListPlaces
