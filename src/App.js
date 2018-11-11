@@ -34,17 +34,17 @@ class App extends React.Component {
           markers:[],
           activeMarker:{},
           myMarker:"",
-          close:""
+          close:"",
     }
 }
 
 // Get the fourSquareData
 async fourSquare (id) {
   const fsId = id
-const res = await fetch(`https://api.foursquare.com/v2/venues/${fsId}?client_id=${fourSquareId}&client_secret=${fourSquareSecret}&v=20181021`)
-const response = await res.json().catch(error=> console.log('Error Returning 4SquareData', error))
+  const res = await fetch(`https://api.foursquare.com/v2/venues/${fsId}?client_id=${fourSquareId}&client_secret=${fourSquareSecret}&v=20181021`)
+  const response = await res.json().catch(error=> console.log('Error Returning 4SquareData', error))
 
-return response;
+  return response;
 };
 
 // Take the input from the list item or marker and pass to the fourSquareAPI, then set state for infowindow data
@@ -93,7 +93,6 @@ componentDidMount(){
 this.setState({
   ...this.state,
   filtered:this.filterLocations(this.state.locations,"")})
-
 
 }
 
@@ -151,6 +150,7 @@ closeWindow = (stat)=>{
     listClose={this.state.closeWindow}
     closeListByWindow={this.closeListByWindow}
     close={this.state.close}
+    showMap={this.state.showMap}
     />
 </ErrorBoundary>
 </div>

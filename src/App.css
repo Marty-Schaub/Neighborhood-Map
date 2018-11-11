@@ -102,6 +102,13 @@ width:75%;
 height:100%;
 }
 
+.no-Map{
+  margin-top: 25vh;
+  color:red;
+  text-align: center;
+  font-size: 16px;
+}
+
 @media screen and (max-width:750px){
   .main {
     flex-basis: 100%;
