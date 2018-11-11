@@ -1,5 +1,4 @@
 // Much of the code in this component came from the google-maps-react NPM page here https://www.npmjs.com/package/google-maps-react
-// and Dan Brown's Fend Walk Through Video https://www.youtube.com/watch?v=NVAVLCJwAAo&feature=youtu.be
 // I modified it to make it meet what I needed
 
 import React from 'react'
@@ -9,8 +8,7 @@ import './App.css';
 class Mapn extends React.Component {
   constructor (props){
   super (props);
-  this.state = {map:null,
-                locations:'',
+  this.state = {locations:'',
                 showingInfoWindow: false,
                 activeMarker: {},
                 selectedPlace: {},
@@ -20,22 +18,32 @@ class Mapn extends React.Component {
                 markers:[],
                 markerProps:[],
                 markerObjects: [],
-                myMarker: null,
-                marker:null};
+                uProp:{},
+                uMarker:{}
+              };
+// this code is taken from stack overflow here: https://stackoverflow.com/questions/51579671/how-to-get-all-markers-in-google-maps-react
+this.onMarkerMounted = element => {
+  this.setState(prevState => ({
+    markerObjects: [...prevState.markerObjects, element]
+  }))
+};
 }
 // this code is from the google-maps-react NPM page here https://www.npmjs.com/package/google-maps-react
+
+//this fires when a marker is clicked
 onMarkerClick = (props, marker, e)=>{
-
-  this.onInfoWindowClose(props)
-
+  if(this.state.activeMarker!=={}){
+    this.onInfoWindowClose(props)
+  }
   this.setState({
     selectedPlace: props,
     activeMarker: marker,
-    showingWindow: true,
-  })
-  marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
-  this.props.fourSquareData(props.id)
 
+  })
+
+  marker.setAnimation(this.props.google.maps.Animation.BOUNCE)
+
+  this.props.fourSquareData(props.id)
   this.setState({showingInfoWindow:true})
 }
 
@@ -44,77 +52,40 @@ onInfoWindowClose = (props) => {
   if (this.state.showingInfoWindow) {
     this.state.activeMarker.setAnimation(null);
     this.setState({showingInfoWindow: false,activeMarker: null})
+    this.props.closeListByWindow();
   }
 };
 
 // this is adapted from the React documentation on componentDidMount
 componentDidUpdate(prevProps, prevState) {
   if (this.props.markerProp !== prevProps.markerProp) {
-     this.onMarkerClick(this.state.markerProps[this.props.markerIndex], this.state.markers[this.props.markerIndex]);
-  }
-  if (this.state.markers.length !== this.props.locations.length){
-     this.onInfoWindowClose();
-     this.updateMarkers(this.props.locations);
-  }
 
+     this.onMarkerClick(this.state.markerObjects[this.props.markerIndex].props, this.state.markerObjects[this.props.markerIndex].marker);
+  }
+  if(this.props.markerProp===prevProps.markerProp &&prevProps.markerProp!==null&&this.props.activeMarker===null){
+     // this.onInfoWindowClose();
+     this.onMarkerClick(this.state.markerObjects[this.props.markerIndex].props, this.state.markerObjects[this.props.markerIndex].marker);
+    console.log("Did I work")
+  }
+  if (this.props.close===0 && this.props.close !==prevProps.close &&this.props.markerProp===prevProps.markerProp &&prevProps.markerProp!==null){
+    this.onInfoWindowClose()
+    console.log("option3")
+  }
 }
-
-// This is from Dan Brown's Fend Walk Through video and also the google maps react documentation
-      mapReady = (props, map) =>{
-        this.setState({map});
-        this.updateMarkers(this.props.locations);
-      }
-
-// This is from Dan Brown's Fend Walk Through video
-      updateMarkers = (locations) => {
-          // If all the locations have been filtered then we're done
-          if (!locations)
-              return;
-
-          // Delete any existing markers
-          this
-              .state
-              .markers
-              .forEach(marker => marker.setMap(null));
-
-          let markerProps = [];
-          let markers = locations.map((location, index) => {
-              let mProps = {
-                  key: index,
-                  id: location.id,
-                  index:index,
-                  name: location.name,
-                  position: location.pos,
-                  url: location.url
-              };
-              markerProps.push(mProps);
-
-              let animation = this.state.animation;
-              let marker = new this
-                  .props
-                  .google
-                  .maps
-                  .Marker({position: location.pos, map: this.state.map, animation});
-              marker.addListener('click', () => {
-                  this.onMarkerClick(mProps, marker, null);
-              });
-              return marker;
-          })
-
-          this.setState({markers, markerProps});
-      }
 
   render() {
     const style = {
   width: '75%',
   height: '100%'
 }
-//this is adapted from what I learned in the courses on Google Maps
+
+
   let bounds = new this.props.google.maps.LatLngBounds();
   let points =[];
+
   this.props.locations.map((myPoints)=>
   points.push( myPoints.pos)
-)
+  )
   for (var i = 0; i < points.length; i++) {
     bounds.extend(points[i]);
   }
@@ -127,23 +98,34 @@ componentDidUpdate(prevProps, prevState) {
         initialCenter={{
             lat: 34.8526,
             lng: -82.4006}}
-          onReady = {this.mapReady}
           bounds={bounds}
-          style ={style}
+          // style ={style}
           onClick={this.onInfoWindowClose}>
 
+          {this.props.locations.map((marker, index) =>
 
+            <Marker
+              ref={this.onMarkerMounted}
+              key={index}
+              index= {index}
+              id={marker.id}
+              name={marker.name}
+              position={marker.pos}
+              onClick={this.onMarkerClick}
+              animation={this.state.animation}
+              />,
+
+        )}
         <InfoWindow
           marker={this.state.activeMarker}
           visible={this.state.showingInfoWindow}
           onClose={this.onInfoWindowClose}>
           <div>
-            <h3>{this.props.name}</h3>
+            <h2>{this.props.name}</h2>
             <h3>{this.props.address}</h3>
             <h3>{this.props.city}</h3>
             <h3>{this.props.phone}</h3>
-            <h6 className="four-square">Details by FOURSQUARE</h6>
-
+            <h6 className="four-square">Data provided by FourSquare</h6>
             </div>
           </InfoWindow>
 

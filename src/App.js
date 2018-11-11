@@ -2,9 +2,11 @@ import React from 'react';
 import Mapn from './map.js'
 import ListPlaces from './List.js'
 import './App.css';
-import SquareAPI from './API/'
 import escapeRegExp from 'escape-string-regexp'
 import ErrorBoundary from './ErrorBoundary'
+
+const fourSquareId ="OORYVO3INV3UBXESZBVFELQDQLRICAR1V3SUXOKYVXRUH0NH"
+const fourSquareSecret ="Q5S0A4MKRWJFTK4C22M4A00GDREV5RELYPXUUZNWMIUB5DBC"
 
 class App extends React.Component {
   constructor( props ){
@@ -32,40 +34,54 @@ class App extends React.Component {
           markers:[],
           activeMarker:{},
           myMarker:"",
-          clsoe:""
+          close:""
     }
 }
 
 // Get the fourSquareData
-   fourSquareData = (id) =>{
+async fourSquare (id) {
+  const fsId = id
+const res = await fetch(`https://api.foursquare.com/v2/venues/${fsId}?client_id=${fourSquareId}&client_secret=${fourSquareSecret}&v=20181021`)
+const response = await res.json().catch(error=> console.log('Error Returning 4SquareData', error))
 
-   SquareAPI.getVenueDetails(id).then((response)=>{
-     console.log(response)
-     this.setState({
-       phone:response.response.venue.contact.formattedPhone,
-       address:response.response.venue.location.formattedAddress[0],
-       city:response.response.venue.location.formattedAddress[1],
-       name:response.response.venue.name,
-       lat:response.response.venue.location.lat,
-       lng:response.response.venue.location.lng,
-       myId:response.response.venue.id,
-       close:false
-     })
-   });
-   };
+return response;
+};
 
-   // This is a combination of what I did for the MYReads app and Dan Brown's Fend Video
+// Take the input from the list item or marker and pass to the fourSquareAPI, then set state for infowindow data
+fourSquareData= (id)=> {
+  this.fourSquare(id).then((response)=>{
+    this.setState({
+     phone:response.response.venue.contact.formattedPhone,
+     address:response.response.venue.location.formattedAddress[0],
+     city:response.response.venue.location.formattedAddress[1],
+     name:response.response.venue.name,
+     lat:response.response.venue.location.lat,
+     lng:response.response.venue.location.lng,
+     myId:response.response.venue.id,
+     close:1
+   })
+  })
+}
+
+
      updateQuery = (query) => {
 
       this.setState({query: query,
         filtered:this.filterLocations(this.state.locations, query)
      })
      }
-// this is adapted from Dan Brown's FEND walk through. He did not use the match and had a more involved process
-filterLocations =(locations, query)=>{
-  const match = new RegExp(escapeRegExp(this.state.query),'i')
-  return   this.state.locations.filter((locations) => match.test(locations.title))
 
+     filterLocations =(locations, query)=>{
+       const match = new RegExp(escapeRegExp(this.state.query),'i')
+       return   this.state.locations.filter((locations) => match.test(locations.title))
+}
+
+  closeListByWindow = ()=> {
+    if (this.state.close!==0)
+    {  this.setState ({close: 0})
+    }else{
+      this.setState({close:1})
+}
 }
 
      clearQuery = ()=> {
@@ -77,19 +93,18 @@ componentDidMount(){
 this.setState({
   ...this.state,
   filtered:this.filterLocations(this.state.locations,"")})
+
+
 }
 
 // this closes the Window when the list item buttons are clicked
-closeWindow = ()=>{
-  if(this.state.close===true){
-    this.setState({close:false})
-  }else{
-this.setState({close:true})
+closeWindow = (stat)=>{
+
+    this.setState({close:stat})
 }
-}
-// this is adapted from Dan Brown's FEND walk through video and what I had done on my own. I was trying to update using a marker ID
+// this takes input from the list when clicked to allow the marker to animate
   markerHolder = async (props, marker, index)=>{
-// console.log(props.id)
+
   if(props===null){
     this.setState({
       markerProp:null,
@@ -101,9 +116,6 @@ this.setState({close:true})
       markerIndex:index
     })
   }
-   console.log(this.state.markerIndex)
-   console.log(this.state.markerProp)
-
 }
 
   render() {
@@ -136,7 +148,9 @@ this.setState({close:true})
     markerIndex={this.state.markerIndex}
     markerProp={this.state.markerProp}
     collectMarker = {this.collectMarker}
-    listClose={this.state.close}
+    listClose={this.state.closeWindow}
+    closeListByWindow={this.closeListByWindow}
+    close={this.state.close}
     />
 </ErrorBoundary>
 </div>
@@ -160,13 +174,15 @@ this.setState({close:true})
     phone = {this.state.phone}
     address={this.state.address}
     city={this.state.city}
-    name={this.state.name}
+    name={this.state.lName}
     id= {this.state.myId}
     fourSquareData={this.fourSquareData}
     showingWindow= {this.state.showingWindow}
     filteredLoc={this.filteredLoc}
     markerHolder={this.markerHolder}
     closeWindow={this.closeWindow}
+    markerProp={this.state.markerProp}
+    close={this.state.close}
     />
     </ErrorBoundary>
 </div>

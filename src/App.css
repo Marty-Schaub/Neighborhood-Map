@@ -34,10 +34,14 @@ body{
      top:8vh;
 
    }
-
+/* Map{
+  height:85%;
+  width:75%;
+} */
 .heading{
   color: white;
-margin-left: 350px;
+  text-align: center;
+/* margin-left: 350px; */
 }
 .App-link {
   color: #61dafb;
@@ -53,6 +57,7 @@ margin-left: 350px;
  display: flex;
  flex-direction: column;
 }
+
 .map-container{
  flex-grow: 1;
  height: 85vh;
@@ -90,29 +95,42 @@ margin-left: 350px;
   top:15vh;
 }
 
-.Map{
-  display: flex;
-flex-wrap: wrap;
+.MAP{
+  /* display: flex;
+flex-wrap: wrap; */
+width:75%;
+height:100%;
 }
 
-@media screen and (max-width:500px){
+@media screen and (max-width:750px){
   .main {
     flex-basis: 100%;
 
   }
 .places{
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap:wrap;
+  flex-direction: column;
   margin-top: 10px;
   position: static;
   left:0;
-  width:25vw;
+  width:100%;
 }
 
 .list-places {
   position:static;
+  width:100vw;
 
 
 }
+.MAP{
+  width:100%;
+}
+.main{
+  flex-basis: 100%
+}
 
+.heading{
+  margin-left: 10px;
+}
 }
