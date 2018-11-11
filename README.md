@@ -1,3 +1,20 @@
+This is the final project for the Udacity FEND NanoDegree. It is built from scratch using Google Maps API, React, FourSquare, and Reg Escape. It was bootstrapped with Create React App and the standard Create React App read me is at the bottom of this read me. 
+
+This project pulled together everything I have learned in the course. The main part I struggled with at first was the animation of the marker when clicking on a list item. I spent weeks trying to fiugre it out and then Dan Brown did a Fend Walk Through video. I realized from that video that I had to use an index pull both the props and the marker. He also had great suggestions on making the project accessible from the beginning through design instead of a lot of code. 
+
+I also watched the Foursquare video by Forrest Walker. He used a helper file to handle all of the Four Square APIs. I chose instead to only use the get venue details API so it is in the APP.js file. Instead of seaching for a list of locations near a point, I chose to pass a FourSquare id into the API and then use the data returned to create the info window.
+
+On the Map side, I have it set to use the markers as bounds to keep it relative to the markers.
+
+On the list items, you must click the same list item to close as the one you selected to open it.
+
+This project is a progressive APP due to being bootstrapped with Create React App. I changed the line of code in the index.js file and registered the service worker. That will only be effective in a production build. 
+
+To run this project, download all the files in this repository. Once that is done, (assuming you have node installed), navigate to the directory and type "node start"
+
+For any suggestions or questions contact marty.schaub@gmail.com
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
